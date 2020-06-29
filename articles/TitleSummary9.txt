@@ -1,2 +1,0 @@
-	Genes regulated in EML1 cells expressing the TEL-AML1 oncogene after 5 and 7 days of treatment with IL7 and FLT3 ligand. The t(12;21) translocation is the most common genetic rearrangement in childhood acute lymphoblastic leukemia (ALL) and gives rise to the TEL-AML1 fusion gene, which functions as a transcription factor.
-TEL-AML1 expression in EML1 cells results in an impairment of differentiation along the B-lymphoid lineage.
