@@ -1,0 +1,11 @@
+fasttext
+bs4
+nltk
+numpy
+sklearn
+wikipedia
+matplotlib
+lxml
+spacy
+scispacy
+en_core_web_lg

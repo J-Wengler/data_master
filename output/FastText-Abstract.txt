@@ -1,0 +1,110 @@
+Document 1 is 100.0% similar to Document 1
+Document 1 is 93.76955032348633% similar to Document 2
+Document 1 is 96.62650227546692% similar to Document 3
+Document 1 is 93.99429559707642% similar to Document 4
+Document 1 is 89.97271060943604% similar to Document 5
+Document 1 is 89.81437087059021% similar to Document 6
+Document 1 is 91.48291349411011% similar to Document 7
+Document 1 is 87.36871480941772% similar to Document 8
+Document 1 is 94.49443221092224% similar to Document 9
+Document 1 is 92.17296242713928% similar to Document 10
+
+Document 2 is 93.76955032348633% similar to Document 1
+Document 2 is 100.0% similar to Document 2
+Document 2 is 97.13072776794434% similar to Document 3
+Document 2 is 97.44924902915955% similar to Document 4
+Document 2 is 95.1777696609497% similar to Document 5
+Document 2 is 97.77427315711975% similar to Document 6
+Document 2 is 96.1422324180603% similar to Document 7
+Document 2 is 93.89109015464783% similar to Document 8
+Document 2 is 96.04179859161377% similar to Document 9
+Document 2 is 98.6904501914978% similar to Document 10
+
+Document 3 is 96.62650227546692% similar to Document 1
+Document 3 is 97.13072776794434% similar to Document 2
+Document 3 is 100.0% similar to Document 3
+Document 3 is 95.72500586509705% similar to Document 4
+Document 3 is 91.97197556495667% similar to Document 5
+Document 3 is 93.70675086975098% similar to Document 6
+Document 3 is 92.45480298995972% similar to Document 7
+Document 3 is 87.95432448387146% similar to Document 8
+Document 3 is 95.32637000083923% similar to Document 9
+Document 3 is 96.88735604286194% similar to Document 10
+
+Document 4 is 93.99429559707642% similar to Document 1
+Document 4 is 97.44924902915955% similar to Document 2
+Document 4 is 95.72500586509705% similar to Document 3
+Document 4 is 100.0% similar to Document 4
+Document 4 is 97.46635556221008% similar to Document 5
+Document 4 is 97.03822731971741% similar to Document 6
+Document 4 is 97.70874977111816% similar to Document 7
+Document 4 is 95.12513875961304% similar to Document 8
+Document 4 is 97.35313057899475% similar to Document 9
+Document 4 is 96.00319266319275% similar to Document 10
+
+Document 5 is 89.97271060943604% similar to Document 1
+Document 5 is 95.1777696609497% similar to Document 2
+Document 5 is 91.97197556495667% similar to Document 3
+Document 5 is 97.46635556221008% similar to Document 4
+Document 5 is 100.0% similar to Document 5
+Document 5 is 96.78645133972168% similar to Document 6
+Document 5 is 98.6631989479065% similar to Document 7
+Document 5 is 96.24865055084229% similar to Document 8
+Document 5 is 95.99936604499817% similar to Document 9
+Document 5 is 93.01206469535828% similar to Document 10
+
+Document 6 is 89.81437087059021% similar to Document 1
+Document 6 is 97.77427315711975% similar to Document 2
+Document 6 is 93.70675086975098% similar to Document 3
+Document 6 is 97.03822731971741% similar to Document 4
+Document 6 is 96.78645133972168% similar to Document 5
+Document 6 is 100.0% similar to Document 6
+Document 6 is 96.4164137840271% similar to Document 7
+Document 6 is 95.47134041786194% similar to Document 8
+Document 6 is 94.81179714202881% similar to Document 9
+Document 6 is 96.04738354682922% similar to Document 10
+
+Document 7 is 91.48291349411011% similar to Document 1
+Document 7 is 96.1422324180603% similar to Document 2
+Document 7 is 92.45480298995972% similar to Document 3
+Document 7 is 97.70874977111816% similar to Document 4
+Document 7 is 98.6631989479065% similar to Document 5
+Document 7 is 96.4164137840271% similar to Document 6
+Document 7 is 100.0% similar to Document 7
+Document 7 is 97.54184484481812% similar to Document 8
+Document 7 is 96.50997519493103% similar to Document 9
+Document 7 is 94.00607347488403% similar to Document 10
+
+Document 8 is 87.36871480941772% similar to Document 1
+Document 8 is 93.89109015464783% similar to Document 2
+Document 8 is 87.95432448387146% similar to Document 3
+Document 8 is 95.12513875961304% similar to Document 4
+Document 8 is 96.24865055084229% similar to Document 5
+Document 8 is 95.47134041786194% similar to Document 6
+Document 8 is 97.54184484481812% similar to Document 7
+Document 8 is 100.0% similar to Document 8
+Document 8 is 93.29989552497864% similar to Document 9
+Document 8 is 90.48494100570679% similar to Document 10
+
+Document 9 is 94.49443221092224% similar to Document 1
+Document 9 is 96.04179859161377% similar to Document 2
+Document 9 is 95.32637000083923% similar to Document 3
+Document 9 is 97.35313057899475% similar to Document 4
+Document 9 is 95.99936604499817% similar to Document 5
+Document 9 is 94.81179714202881% similar to Document 6
+Document 9 is 96.50997519493103% similar to Document 7
+Document 9 is 93.29989552497864% similar to Document 8
+Document 9 is 100.0% similar to Document 9
+Document 9 is 94.31791305541992% similar to Document 10
+
+Document 10 is 92.17296242713928% similar to Document 1
+Document 10 is 98.6904501914978% similar to Document 2
+Document 10 is 96.88735604286194% similar to Document 3
+Document 10 is 96.00319266319275% similar to Document 4
+Document 10 is 93.01206469535828% similar to Document 5
+Document 10 is 96.04738354682922% similar to Document 6
+Document 10 is 94.00607347488403% similar to Document 7
+Document 10 is 90.48494100570679% similar to Document 8
+Document 10 is 94.31791305541992% similar to Document 9
+Document 10 is 100.0% similar to Document 10
+

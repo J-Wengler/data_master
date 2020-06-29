@@ -1,6 +1,4 @@
-import gensim
-from gensim.models import Word2Vec
-from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.tokenize import sent_tokenize
 from bs4 import BeautifulSoup
 import re
 def cleanText(text):
@@ -18,18 +16,9 @@ input_file = open("/Users/jameswengler/PycharmProjects/WordEmbedding/allText.txt
 input_text = input_file.read()
 input_text = cleanText(input_text)
 
-#  The dog is blue
-#  The cat goes meow
-#
-# [[The, dog, is blue], [the, cat, goes, meow]]
-
 sent_list = sent_tokenize(input_text)
 
-data = []
-for sent in sent_list:
-    word_list = word_tokenize(sent)
-    data.append(word_list)
-
-model = Word2Vec(data, window = 5, sg = 1)
-
-print(model.most_similar('skin'))
+with open("/Users/jameswengler/PycharmProjects/WordEmbedding/processedFile.txt", "w+") as out:
+    for sent in sent_list:
+        out.write(sent)
+    out.close()
