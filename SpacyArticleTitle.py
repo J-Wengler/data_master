@@ -14,9 +14,6 @@ import nltk
 import matplotlib.pyplot as plt
 import spacy
 import en_core_web_lg
-nltk.download('stopwords')
-nltk.download('wordnet')
-nltk.download('punkt')
 
 def vec(s, nlp):
     return nlp.vocab[s].vector
@@ -101,7 +98,7 @@ def trainModel(pathToCleanFile):
 
 allDocs = []
 for i in range(1,11):
-    inString = '/Users/jameswengler/PycharmProjects/WordEmbedding/articles/Article{}Name.txt'.format(i)
+    inString = './Article{}Name.txt'.format(i)
     temp_vec = getDocEmbedding(inString)
     allDocs.append(temp_vec)
 
@@ -148,4 +145,4 @@ for coor in principalComponents:
 
 
 # plt.show()
-plt.savefig("images/Spacy-Title.png")
+#plt.savefig("images/Spacy-Title.png")

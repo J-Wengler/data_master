@@ -99,7 +99,7 @@ def trainModel(pathToCleanFile):
 
 allDocs = []
 for i in range(1,11):
-    inString = '/Users/jameswengler/PycharmProjects/WordEmbedding/articles/TitleSummary{}.txt'.format(i)
+    inString = './TitleSummary{}.txt'.format(i)
     temp_vec = getDocEmbedding(inString)
     allDocs.append(temp_vec)
 
@@ -146,4 +146,4 @@ for coor in principalComponents:
 
 
 # plt.show()
-plt.savefig("images/Spacy-TitleAndAbstract.png")
+#plt.savefig("images/Spacy-TitleAndAbstract.png")

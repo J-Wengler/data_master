@@ -1,3 +1,7 @@
 #!/bin/bash
 
-Python3 helloWorld.py
+
+#python3 ./NLTKImport.py
+#python3 ./FastTextArticleTitle.py
+python3 ./test.py
+

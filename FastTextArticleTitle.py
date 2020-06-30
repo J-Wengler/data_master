@@ -102,11 +102,11 @@ def trainModel(pathToCleanFile):
 
 
 #model = trainModel('/Users/jameswengler/PycharmProjects/WordEmbedding/wikiArticles.txt', model = 'skipgram')
-#model = FastText.load_fasttext_format('BioWordVec_PubMed_MIMICIII_d200.bin')
-model = FastText.load_word2vec_format(‘BioWordVec_PubMed_MIMICIII_d200.vec.bin')
+model = fasttext.load_model('/model.bin')
+#model = fasttext.load_model('model.bin')
 allDocs = []
 for i in range(1,11):
-    inString = '/Users/jameswengler/PycharmProjects/WordEmbedding/articles/Article{}Name.txt'.format(i)
+    inString = '/Article{}Name.txt'.format(i)
     temp_vec = getDocEmbedding(inString, model)
     allDocs.append(temp_vec)
 
