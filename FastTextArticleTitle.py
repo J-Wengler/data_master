@@ -102,7 +102,7 @@ def trainModel(pathToCleanFile):
 
 
 #model = trainModel('/Users/jameswengler/PycharmProjects/WordEmbedding/wikiArticles.txt', model = 'skipgram')
-model = fasttext.load_model('/model.bin')
+model = fasttext.load_model('/BioWordModel/model.bin')
 #model = fasttext.load_model('model.bin')
 allDocs = []
 for i in range(1,11):
@@ -115,17 +115,16 @@ for i in range(1,11):
 # data = StandardScaler().fit_transform(allDocs)
 firstDoc = 1
 secondDoc = 1
-out_file = open("output/FastText-Title.txt", 'w+')
+#out_file = open("output/FastText-Title.txt", 'w+')
 for doc in allDocs:
     secondDoc = 1
     for doc2 in allDocs:
 
         cosine_similarity = 1 - cosine(doc, doc2)
         cosine_similarity *= 100
-        out_file.write("Document {} is {}% similar to Document {}".format(firstDoc, cosine_similarity, secondDoc))
-        out_file.write('\n')
+        print("Document {} is {}% similar to Document {}".format(firstDoc, cosine_similarity, secondDoc))
         secondDoc += 1
-    out_file.write('\n')
+    print('\n')
     firstDoc += 1
 
 
@@ -156,4 +155,4 @@ for coor in principalComponents:
 
 
 # plt.show()
-plt.savefig("images/FastText-Title.png")
+#plt.savefig("images/FastText-Title.png")

@@ -11,4 +11,3 @@ COPY getBioWordVecs.sh /
 #COPY SpacyArticleAbstractAndTitle.py /
 COPY runMe.sh /
 COPY FastTextArticleTitle.py /
-COPY test.py /
