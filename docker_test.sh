@@ -4,6 +4,8 @@ docker build -t data_master .
 
 mkdir -p BioWordModel
 
+./getBioWordVecs.sh 
+
 docker volume create data-volume
 docker run --rm -i -t -v ~/WORDEMBEDDING/data_master/BioWordModel/:/BioWordModel/ data_master /runMe.sh
 
