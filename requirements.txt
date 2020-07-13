@@ -9,3 +9,6 @@ lxml
 spacy
 scispacy
 en_core_web_lg
+pandas
+gensim
+

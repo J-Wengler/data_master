@@ -12,12 +12,16 @@ import wikipedia
 from nltk.stem import WordNetLemmatizer
 import nltk
 import matplotlib.pyplot as plt
-import spacy
-import en_core_web_lg
+from TextRank import TextRank4Keyword
 
-
-def vec(s, nlp):
-    return nlp.vocab[s].vector
+def load_vectors(fname):
+    fin = io.open(fname, 'r', encoding='utf-8', newline='\n', errors='ignore')
+    n, d = map(int, fin.readline().split())
+    data = {}
+    for line in fin:
+        tokens = line.rstrip().split(' ')
+        data[tokens[0]] = map(float, tokens[1:])
+    return data
 
 def cleanText(text):
     stemmer = WordNetLemmatizer()
@@ -40,28 +44,35 @@ def cleanText(text):
     tokens = [stemmer.lemmatize(word) for word in tokens]
     tokens = [word for word in tokens if word not in en_stop]
     tokens = [word for word in tokens if len(word) > 3]
-
     preprocessed_text = ' '.join(tokens)
     return preprocessed_text
 
-def getDocEmbedding(pathToDoc):
+def getDocEmbedding(pathToDoc, model):
 
     in_file = open(pathToDoc)
     in_text = in_file.read()
     in_text = cleanText(in_text)
 
-    allWords = word_tokenize(in_text)
-    nlp = en_core_web_lg.load()
+    tr4w = TextRank4Keyword()
+    tr4w.analyze(in_text, candidate_pos = ['NOUN', 'PROPN','ADJ'], window_size=6, lower=False)
+    ans = tr4w.get_keywords(10)
+
+    allWords = []
+    for key in ans:
+        if ans[key] > 1.0:
+            allWords.append(key)
 
     first_word = allWords[0]
-    doc_vec = vec(first_word, nlp)
-
+    doc_vec = model[first_word]
+    numWords = 1
     for i, word in enumerate(allWords):
         if (i != 0):
-            new_vec = vec(word, nlp)
+            new_vec = model[word]
             if new_vec is not None:
+                numWords += 1
                 doc_vec = np.add(doc_vec, new_vec)
 
+    doc_vec = doc_vec / numWords
     return doc_vec
 
 def cleanDataTrainModel(pathToTextFile):
@@ -97,26 +108,35 @@ def trainModel(pathToCleanFile):
 # out_file.write(cocat_articles)
 ###################################################################################################
 
+
+
+#model = trainModel('/Users/jameswengler/PycharmProjects/WordEmbedding/wikiArticles.txt', model = 'skipgram')
+model = fasttext.load_model('/BioWordModel/model.bin')
+#model = fasttext.load_model('model.bin')
 allDocs = []
 for i in range(1,11):
-    inString = '/Users/jameswengler/PycharmProjects/WordEmbedding/articles/Article{}.txt'.format(i)
-    temp_vec = getDocEmbedding(inString)
+    inString = '/Article{}Name.txt'.format(i)
+    temp_vec = getDocEmbedding(inString, model)
     allDocs.append(temp_vec)
 
+
+
+# data = StandardScaler().fit_transform(allDocs)
 firstDoc = 1
 secondDoc = 1
-out_file = open("output/Spacy-Abstract.txt", 'w+')
+#out_file = open("output/FastText-Title.txt", 'w+')
 for doc in allDocs:
     secondDoc = 1
     for doc2 in allDocs:
 
         cosine_similarity = 1 - cosine(doc, doc2)
         cosine_similarity *= 100
-        out_file.write("Document {} is {}% similar to Document {}".format(firstDoc, cosine_similarity, secondDoc))
-        out_file.write('\n')
+        print("Document {} is {}% similar to Document {}".format(firstDoc, cosine_similarity, secondDoc))
         secondDoc += 1
-    out_file.write('\n')
+    print('\n')
     firstDoc += 1
+
+
 
 
 pca = PCA(n_components=2)
@@ -144,4 +164,4 @@ for coor in principalComponents:
 
 
 # plt.show()
-plt.savefig("images/Spacy-Abstract.png")
+#plt.savefig("images/FastText-Title.png")
