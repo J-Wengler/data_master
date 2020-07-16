@@ -6,10 +6,11 @@ python3 ./NLTKImport.py
 #python3 ./FastTextArticleTitle.py
 #echo "ARTICLE ABSTRACT ONLY"
 #python3 ./FastTextArticleAbstract.py
-echo "ARTICLE TITLE AND ABSTRACT"
-python3 ./FastTextTitleAndAbstract.py
+#echo "ARTICLE TITLE AND ABSTRACT"
+#python3 ./FastTextTitleAndAbstract.py
 #./getConceptVecs.sh
 #python3 ./bioConceptVec.py
 #python3 ./mlNLP.py
 #python3 ./getKeywords.py
 #python3 ./testKeywords.py
+python3 geoAPI.py

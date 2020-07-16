@@ -40,9 +40,9 @@ def cleanText(text):
     text = re.sub('\n', ' ', text)
     text = re.sub('[n|N]o\.', 'number', text)
     tokens = text.split()
-    tokens = [stemmer.lemmatize(word) for word in tokens]
-    tokens = [word for word in tokens if word not in en_stop]
-    tokens = [word for word in tokens if len(word) > 3]
+    #tokens = [stemmer.lemmatize(word) for word in tokens]
+    #tokens = [word for word in tokens if word not in en_stop]
+    #tokens = [word for word in tokens if len(word) > 3]
     preprocessed_text = ' '.join(tokens)
     return preprocessed_text
 
