@@ -1,2 +1,4 @@
-./Models/*
-./toIgnore/*
+*
+!Python_Code/*
+!Bash_Scripts/*
+!requirements.txt

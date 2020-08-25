@@ -2,7 +2,7 @@ class tester:
 
     def __init__(self):
         self.query_number = 0
-        self.data_names = [1,2,3,4]
+        self.data_names = []
         self.in_file = ""
 
     def whichQuery(self, query_num):
