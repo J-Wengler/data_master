@@ -19,5 +19,5 @@ python3 ./NLTKImport.py
 #python3 getQuery4.py
 #python3 getQuery5.py
 python3 allKeywordBioWordVec.py
-#python3 getResults.py
+python3 getResults.py
 #python3 geoAPI.py

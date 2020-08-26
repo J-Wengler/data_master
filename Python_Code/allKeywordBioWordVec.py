@@ -39,7 +39,7 @@ def cleanText(text):
     return text
 
 def getAllArticles():
-    #rq = requests.get('http://stargeo.org/api/v2/series/?limit=10').json()
+    #rq = requests.get('http://stargeo.org/api/v2/series/?limit=5').json()
     rq = requests.get('http://stargeo.org/api/v2/series/?limit=1000000').json()
     #data = pd.read_json(rq)
     series_to_summary = {}

@@ -4,7 +4,7 @@ import json
 import fasttext
 import re
 from bs4 import BeautifulSoup
-
+import random
 
 
 
@@ -35,7 +35,10 @@ series = ["GSE42639",
         "GSE36328",
         "GSE60572",
         "GSE60573"]
+
 nameFile = open("/Models/Queries/q4/names.txt", "w")
+namesToQuery = []
+abstracts = []
 
 for s in series:
     api_text = ("http://stargeo.org/api/v2/series/{}/".format(s))
@@ -44,6 +47,10 @@ for s in series:
     temp_dict = data['attrs']
     name = data['gse_name']
     summary = temp_dict['summary']
+    if summary not in abstracts:
+        abstracts.append(summary)
+        namesToQuery.append(name)
+    abstracts.append(summary)
     title = temp_dict['title']
     summary = summary.replace("\n", " ")
     title = title.replace("\n", " ")
@@ -51,6 +58,13 @@ for s in series:
     outFile.write(cleanText(title))
     outFile.write(' ')
     outFile.write(cleanText(summary))
-    nameFile.write(name)
-    nameFile.write(' ')
-nameFile.close()
+
+ranNames = random.choices(namesToQuery, k = 3)
+nameQueryFile = open("/Models/Queries/q4/names_to_query.txt", "w")
+
+for name in ranNames:
+    nameQueryFile.write(name + ' ')
+
+for name in series:
+    if name not in ranNames:
+        nameFile.write(name + ' ')

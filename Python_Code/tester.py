@@ -24,9 +24,16 @@ class tester:
             if name in self.data_names:
                 num_relevant += 1
         
-        recall = num_relevant / total_relevant
-        precision = num_relevant / num_obtained
-        score = 2 * (precision * recall) / (precision + recall)
-        return score
+        if num_obtained != 0 and num_relevant != 0:
+
+            recall = num_relevant / total_relevant
+            precision = num_relevant / num_obtained
+            if recall != 0 and precision != 0:
+                score = 2 * (precision * recall) / (precision + recall)
+                return score
+            else:
+                return 0
+        else:
+            return 0
 
 

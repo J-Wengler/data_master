@@ -1,4 +1,4 @@
-emport os
+import os
 from tester import tester
 
 resultPath = ["MultipartitieRank", "PositionRank", "SingleRank", "TFIDF", "TextRank", "TopicalRank", "YAKE", "KPMINER", "TopicRankResults"]
@@ -8,14 +8,14 @@ def getScore(filePath):
     with open(filePath, "r+") as in_file:
         for line in in_file:
             line_list = line.split('-')
-            series_to_score[line_list[0]] = line_ist[1]
+            series_to_score[line_list[0]] = line_list[1]
     #avg_per = findAvgPercent(series_to_score)
     series_to_test = []
     for key in series_to_score:
-        if series_to_score[key] > 95:
+        if float(series_to_score[key]) > .95:
             series_to_test.append(key)
     myTester = tester()
-    filePathList = filePath/split('/')
+    filePathList = filePath.split('/')
     queryNum = int(filePathList[3][0])
     myTester.whichQuery(queryNum)
     score = myTester.returnScore(series_to_test)
@@ -36,14 +36,15 @@ def findAvgPercent(series_to_score):
 
 
 outputFile = open('/Models/BioWordVecOutput.txt', 'w+')
-outputFile.write("BioWordModel Results\n\n")
-outputFile.write("MODEL\t\t\QUERY\t\tSCORE\n")
+outputFile.write("BioWordModel Results\n")
+outputFile.write("MODEL\tQUERY\tSCORE\n")
 
 for name in resultPath:
     path = "/Models/{}".format(name)
     for fileName in os.listdir(path):
         score = getScore(path + "/" + fileName)
-        strForFile = "{}\t\t{}\t\t{}\n".format(name, fileName, score)
+        query = fileName[0]
+        strForFile = "{}\t{}\t{}\n".format(str(name).strip(), str(query).strip(), str(score).strip())
         outputFile.write(strForFile)
 
 
