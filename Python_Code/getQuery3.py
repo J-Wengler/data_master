@@ -37,6 +37,12 @@ series = ["GSE19007",
         "GSE68688",
         "GSE36240"]
 
+addToFile = open('Models/allQueries.txt', 'a+')
+for ser in series:
+    strToWrite = "{}\n".format(ser)
+    addToFile.write(strToWrite)
+addToFile.close()
+
 nameFile = open("/Models/Queries/q3/names.txt", "w")
 namesToQuery = []
 abstracts = []

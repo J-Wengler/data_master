@@ -19,11 +19,9 @@ import requests
 from gensim.models import KeyedVectors
 import pandas as pd
 import re
-from joblib import Parallel, delayed
-import time
+import fasttext.util
 import multiprocessing
-from multiprocessing import Pool
-
+import time
 
 def cleanText(text):
     text = BeautifulSoup(text, "lxml").text
@@ -44,8 +42,8 @@ def cleanText(text):
     return text
 
 def getAllArticles():
-    rq = requests.get('http://stargeo.org/api/v2/series/?limit=50').json()
-    #rq = requests.get('http://stargeo.org/api/v2/series/?limit=1000000').json()
+    #rq = requests.get('http://stargeo.org/api/v2/series/?limit=1001').json()
+    rq = requests.get('http://stargeo.org/api/v2/series/?limit=1000000').json()
     #data = pd.read_json(rq)
     series_to_summary = {}
     for row in rq['results']:
@@ -60,11 +58,13 @@ def getAllArticles():
     return series_to_summary
 
 def getKeywordEmbedding(keywords,model, numWords):
-    doc_vec = np.zeros((100,))
-    out_file = open('/Models/BIOWORDVEC/failed_words.txt', 'a+')
+    doc_vec = np.zeros((300,))
+    out_file = open('/Models/FastTextWiki/failed_words.txt', 'a+')
     for i, word in enumerate(keywords):
         if type(word) is tuple:
             word = word[0]
+        #print("GOOD THINGS ARE HAPPENING")
+        #print("CURRENT WORD : {}".format(word))
         word_list = word.split()
         if len(word_list) > 1:
             new_vec = getKeywordEmbedding(word_list, model, numWords)
@@ -75,11 +75,9 @@ def getKeywordEmbedding(keywords,model, numWords):
             error = False
             try:
                 new_vec = model[word_list[0]]
-                print("{} was turned into a vector".format(word_list[0]))
             except KeyError or ValueError:
+                out_file.write(word_list[0])
                 #print("{} is not found in the model... Skipping".format(word_list[0]))
-                strToWrite = word_list[0] + '\n'
-                out_file.write(strToWrite)
                 error = True
                 break
             if new_vec is not None and error is False:
@@ -107,7 +105,7 @@ def getNamesToQuery(path):
 
 
 def getTopicRank(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/TopicRankResults/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/FastTextWiki/TopicRankResults/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -119,7 +117,6 @@ def getTopicRank(model, articles, query):
         method.candidate_weighting()
         keyphrases = method.get_n_best(n=5)
         embeddings.append(getKeywordEmbedding(keyphrases,model, 0))
-    print("LENGTH --- {}".format(len(articles)))
     num_articles = 0
     for art in articles:
         num_articles += 1
@@ -144,12 +141,13 @@ def getTopicRank(model, articles, query):
                 num_embeddings += 1
             sim_to_name[art] = avg_sim / num_embeddings
     for name in sim_to_name:
+        print("{}-{}\n".format(name, sim_to_name[name]))
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
 
 
 def getTFIDF(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/TFIDF/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/FastTextWiki/TFIDF/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -161,7 +159,6 @@ def getTFIDF(model, articles, query):
         method.candidate_weighting()
         keyphrases = method.get_n_best(n=5)
         embeddings.append(getKeywordEmbedding(keyphrases,model, 0))
-    print("LENGTH --- {}".format(len(articles)))
     num_articles = 0
     for art in articles:
         num_articles += 1
@@ -186,10 +183,11 @@ def getTFIDF(model, articles, query):
                 num_embeddings += 1
             sim_to_name[art] = avg_sim / num_embeddings
     for name in sim_to_name:
+        print("{}-{}\n".format(name, sim_to_name[name]))
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
 def getKPMiner(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/KPMINER/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/FastTextWiki/KPMINER/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -201,7 +199,6 @@ def getKPMiner(model, articles, query):
         method.candidate_weighting()
         keyphrases = method.get_n_best(n=5)
         embeddings.append(getKeywordEmbedding(keyphrases,model, 0))
-    print("LENGTH --- {}".format(len(articles)))
     num_articles = 0
     for art in articles:
         num_articles += 1
@@ -226,11 +223,11 @@ def getKPMiner(model, articles, query):
                 num_embeddings += 1
             sim_to_name[art] = avg_sim / num_embeddings
     for name in sim_to_name:
-        print("SIM : {}".format(sim_to_name[name]))
+        print("{}-{}\n".format(name, sim_to_name[name]))
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
 def getYAKE(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/YAKE/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/FastTextWiki/YAKE/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -242,7 +239,6 @@ def getYAKE(model, articles, query):
         method.candidate_weighting()
         keyphrases = method.get_n_best(n=5)
         embeddings.append(getKeywordEmbedding(keyphrases,model, 0))
-    print("LENGTH --- {}".format(len(articles)))
     num_articles = 0
     for art in articles:
         num_articles += 1
@@ -267,22 +263,22 @@ def getYAKE(model, articles, query):
                 num_embeddings += 1
             sim_to_name[art] = avg_sim / num_embeddings
     for name in sim_to_name:
+        print("{}-{}\n".format(name, sim_to_name[name]))
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
 def getTextRank(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/TextRank/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/FastTextWiki/TextRank/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
     sim_to_name = {}
     for filename in filenames:
-        method = pke.unsupervised.TextRank()
+        method = pke.unsupervised.TopicRank()
         method.load_document(input='/Models/Queries/q{}/{}.txt'.format(query, filename), language='en')
         method.candidate_selection()
         method.candidate_weighting()
         keyphrases = method.get_n_best(n=5)
         embeddings.append(getKeywordEmbedding(keyphrases,model, 0))
-    print("LENGTH --- {}".format(len(articles)))
     num_articles = 0
     for art in articles:
         num_articles += 1
@@ -307,10 +303,11 @@ def getTextRank(model, articles, query):
                 num_embeddings += 1
             sim_to_name[art] = avg_sim / num_embeddings
     for name in sim_to_name:
+        print("{}-{}\n".format(name, sim_to_name[name]))
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
 def getSingleRank(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/SingleRank/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/FastTextWiki/SingleRank/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -322,7 +319,6 @@ def getSingleRank(model, articles, query):
         method.candidate_weighting()
         keyphrases = method.get_n_best(n=5)
         embeddings.append(getKeywordEmbedding(keyphrases,model, 0))
-    print("LENGTH --- {}".format(len(articles)))
     num_articles = 0
     for art in articles:
         num_articles += 1
@@ -347,10 +343,11 @@ def getSingleRank(model, articles, query):
                 num_embeddings += 1
             sim_to_name[art] = avg_sim / num_embeddings
     for name in sim_to_name:
+        print("{}-{}\n".format(name, sim_to_name[name]))
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
 def getTopicalRank(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/TopicalRank/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/FastTextWiki/TopicalRank/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -362,7 +359,6 @@ def getTopicalRank(model, articles, query):
         method.candidate_weighting()
         keyphrases = method.get_n_best(n=5)
         embeddings.append(getKeywordEmbedding(keyphrases,model, 0))
-    print("LENGTH --- {}".format(len(articles)))
     num_articles = 0
     for art in articles:
         num_articles += 1
@@ -387,10 +383,11 @@ def getTopicalRank(model, articles, query):
                 num_embeddings += 1
             sim_to_name[art] = avg_sim / num_embeddings
     for name in sim_to_name:
+        print("{}-{}\n".format(name, sim_to_name[name]))
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
 def getPositionRank(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/PositionRank/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/FastTextWiki/PositionRank/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -402,7 +399,6 @@ def getPositionRank(model, articles, query):
         method.candidate_weighting()
         keyphrases = method.get_n_best(n=5)
         embeddings.append(getKeywordEmbedding(keyphrases,model, 0))
-    print("LENGTH --- {}".format(len(articles)))
     num_articles = 0
     for art in articles:
         num_articles += 1
@@ -427,10 +423,11 @@ def getPositionRank(model, articles, query):
                 num_embeddings += 1
             sim_to_name[art] = avg_sim / num_embeddings
     for name in sim_to_name:
+        print("{}-{}\n".format(name, sim_to_name[name]))
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
 def getMultipartiteRank(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/MultipartitieRank/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/FastTextWiki/MultipartitieRank/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -442,7 +439,6 @@ def getMultipartiteRank(model, articles, query):
         method.candidate_weighting()
         keyphrases = method.get_n_best(n=5)
         embeddings.append(getKeywordEmbedding(keyphrases,model, 0))
-    print("LENGTH --- {}".format(len(articles)))
     num_articles = 0
     for art in articles:
         num_articles += 1
@@ -467,12 +463,17 @@ def getMultipartiteRank(model, articles, query):
                 num_embeddings += 1
             sim_to_name[art] = avg_sim / num_embeddings
     for name in sim_to_name:
+        print("{}-{}\n".format(name, sim_to_name[name]))
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
-print("Started BioWordVec")
+print("FastTextWiki has been started")
 
 all_articles = getAllArticles()
-model = load_embedding("/Models/concept_model.bin")
+#model = load_embedding("/Models/wiki.en.vec")
+fasttext.util.download_model('en', if_exists='ignore')
+model = fasttext.load_model('cc.en.300.bin')
+all_articles = getAllArticles()
+
 def doJobs(i):
     #threads = []
     tr = multiprocessing.Process(target=getTopicRank, args=(model, all_articles, i))

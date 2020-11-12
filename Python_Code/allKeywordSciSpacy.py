@@ -1,3 +1,5 @@
+import scispacy
+import spacy
 import pke
 import fasttext
 from bs4 import BeautifulSoup
@@ -19,11 +21,8 @@ import requests
 from gensim.models import KeyedVectors
 import pandas as pd
 import re
-from joblib import Parallel, delayed
-import time
 import multiprocessing
-from multiprocessing import Pool
-
+import time
 
 def cleanText(text):
     text = BeautifulSoup(text, "lxml").text
@@ -44,8 +43,8 @@ def cleanText(text):
     return text
 
 def getAllArticles():
-    rq = requests.get('http://stargeo.org/api/v2/series/?limit=50').json()
-    #rq = requests.get('http://stargeo.org/api/v2/series/?limit=1000000').json()
+    #rq = requests.get('http://stargeo.org/api/v2/series/?limit=10').json()
+    rq = requests.get('http://stargeo.org/api/v2/series/?limit=1000000').json()
     #data = pd.read_json(rq)
     series_to_summary = {}
     for row in rq['results']:
@@ -60,11 +59,13 @@ def getAllArticles():
     return series_to_summary
 
 def getKeywordEmbedding(keywords,model, numWords):
-    doc_vec = np.zeros((100,))
-    out_file = open('/Models/BIOWORDVEC/failed_words.txt', 'a+')
+    doc_vec = np.zeros((200,))
+    out_file = open('/Models/SciSpacy/failed_words.txt', 'a+')
     for i, word in enumerate(keywords):
         if type(word) is tuple:
             word = word[0]
+        #print("GOOD THINGS ARE HAPPENING")
+        #print("CURRENT WORD : {}".format(word))
         word_list = word.split()
         if len(word_list) > 1:
             new_vec = getKeywordEmbedding(word_list, model, numWords)
@@ -74,12 +75,11 @@ def getKeywordEmbedding(keywords,model, numWords):
         else:
             error = False
             try:
-                new_vec = model[word_list[0]]
-                print("{} was turned into a vector".format(word_list[0]))
+                #new_vec = model[word_list[0]]
+                new_vec = model.vocab[word_list[0]].vector
             except KeyError or ValueError:
+                out_file.write(word_list[0])
                 #print("{} is not found in the model... Skipping".format(word_list[0]))
-                strToWrite = word_list[0] + '\n'
-                out_file.write(strToWrite)
                 error = True
                 break
             if new_vec is not None and error is False:
@@ -107,7 +107,7 @@ def getNamesToQuery(path):
 
 
 def getTopicRank(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/TopicRankResults/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/SciSpacy/TopicRankResults/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -149,7 +149,7 @@ def getTopicRank(model, articles, query):
 
 
 def getTFIDF(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/TFIDF/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/SciSpacy/TFIDF/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -189,7 +189,7 @@ def getTFIDF(model, articles, query):
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
 def getKPMiner(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/KPMINER/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/SciSpacy/KPMINER/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -226,11 +226,10 @@ def getKPMiner(model, articles, query):
                 num_embeddings += 1
             sim_to_name[art] = avg_sim / num_embeddings
     for name in sim_to_name:
-        print("SIM : {}".format(sim_to_name[name]))
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
 def getYAKE(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/YAKE/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/SciSpacy/YAKE/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -270,7 +269,7 @@ def getYAKE(model, articles, query):
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
 def getTextRank(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/TextRank/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/SciSpacy/TextRank/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -310,7 +309,7 @@ def getTextRank(model, articles, query):
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
 def getSingleRank(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/SingleRank/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/SciSpacy/SingleRank/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -350,7 +349,7 @@ def getSingleRank(model, articles, query):
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
 def getTopicalRank(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/TopicalRank/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/SciSpacy/TopicalRank/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -390,7 +389,7 @@ def getTopicalRank(model, articles, query):
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
 def getPositionRank(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/PositionRank/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/SciSpacy/PositionRank/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -430,7 +429,7 @@ def getPositionRank(model, articles, query):
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
 def getMultipartiteRank(model, articles, query):
-    out_file = open('/Models/BIOWORDVEC/MultipartitieRank/{}.txt'.format(query), 'w+')
+    out_file = open('/Models/SciSpacy/MultipartitieRank/{}.txt'.format(query), 'w+')
     path = '/Models/Queries/q{}/'.format(query)
     filenames = getNamesToQuery(path)
     embeddings = []
@@ -469,10 +468,10 @@ def getMultipartiteRank(model, articles, query):
     for name in sim_to_name:
         out_file.write("{}-{}\n".format(name, sim_to_name[name]))
 
-print("Started BioWordVec")
-
+print("Started SciSpacy")
 all_articles = getAllArticles()
-model = load_embedding("/Models/concept_model.bin")
+model = spacy.load("en_ner_bc5cdr_md")
+
 def doJobs(i):
     #threads = []
     tr = multiprocessing.Process(target=getTopicRank, args=(model, all_articles, i))
